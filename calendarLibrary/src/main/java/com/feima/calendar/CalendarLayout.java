@@ -94,8 +94,8 @@ public class CalendarLayout extends LinearLayout {
     private static final int GESTURE_MODE_DEFAULT = 0;
 
     //       /**
-        //     * 仅日历有效
-        //     */
+    //     * 仅日历有效
+    //     */
     //    private static final int GESTURE_MODE_ONLY_CALENDAR = 1;
 
     /**
@@ -251,6 +251,7 @@ public class CalendarLayout extends LinearLayout {
         requestLayout();
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -309,6 +310,9 @@ public class CalendarLayout extends LinearLayout {
                         mDelegate.mViewChangeListener.onViewChange(false);
                     }
                     isWeekView = true;
+                    if (onCalendarWindowChangeListener != null) {
+                        onCalendarWindowChangeListener.shrink();
+                    }
                     return false;
                 }
                 hideWeek(false);
@@ -685,6 +689,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if (onCalendarWindowChangeListener != null) {
+            onCalendarWindowChangeListener.expand();
+        }
         return true;
     }
 
@@ -728,6 +735,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if (onCalendarWindowChangeListener != null) {
+            onCalendarWindowChangeListener.shrink();
+        }
         return true;
     }
 
@@ -920,5 +930,23 @@ public class CalendarLayout extends LinearLayout {
          * @return 是否滚动到顶部
          */
         boolean isScrollToTop();
+    }
+
+    private OnCalendarWindowChangeListener onCalendarWindowChangeListener;
+
+    public void setOnCalendarWindowChangeListener(OnCalendarWindowChangeListener onCalendarWindowChangeListener) {
+        this.onCalendarWindowChangeListener = onCalendarWindowChangeListener;
+    }
+
+    public interface OnCalendarWindowChangeListener {
+        /**
+         * 展开
+         */
+        void expand();
+
+        /**
+         * 折叠
+         */
+        void shrink();
     }
 }
